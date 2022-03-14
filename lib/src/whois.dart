@@ -33,10 +33,6 @@ Future<String?> findWhoisServer({
 }
 
 Future<String?> whois(String domain) async {
-  final addresses = await InternetAddress.lookup(domain);
-  if (addresses.isEmpty) {
-    return null;
-  }
   final whoisServer = await findWhoisServer(domain: domain);
   if (whoisServer == null) {
     return null;
