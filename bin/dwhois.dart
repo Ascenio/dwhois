@@ -9,4 +9,5 @@ Future<void> main() async {
   socket.add('$domain\r\n'.codeUnits);
   final body = await socket.map((bytes) => String.fromCharCodes(bytes)).first;
   print(body);
+  await socket.close();
 }
