@@ -31,6 +31,35 @@ void main() {
       expect(await findWhoisServer(domain: 'foo.bar.baz'), isNull);
     });
   });
+
+  group('whoisMany', () {
+    test('emits nothing for empty input', () {
+      expect(whoisMany([]), emitsDone);
+    });
+
+    test('emits responses for valid domains', () {
+      expect(
+        whoisMany(['google.com', 'pub.dev']),
+        emitsInOrder([
+          emitsInAnyOrder([
+            startsWith(googleResultBegin),
+            startsWith(pubDevResultBegin),
+          ]),
+          emitsDone,
+        ]),
+      );
+    });
+
+    test('ignores invalid domains', () {
+      expect(
+        whoisMany(['google.com', 'foo.bar.baz']),
+        emitsInOrder([
+          startsWith(googleResultBegin),
+          emitsDone,
+        ]),
+      );
+    });
+  });
 }
 
 const googleResultBegin = '''
@@ -57,4 +86,11 @@ const googleResultBegin = '''
    Name Server: NS4.GOOGLE.COM\r
    DNSSEC: unsigned\r
    URL of the ICANN Whois Inaccuracy Complaint Form: https://www.icann.org/wicf/\r
+''';
+
+const pubDevResultBegin = '''
+Domain Name: pub.dev\r
+Registry Domain ID: 33E50E250-DEV\r
+Registrar WHOIS Server: whois.nic.google\r
+Registrar URL: http://www.markmonitor.com\r
 ''';

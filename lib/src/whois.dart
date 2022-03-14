@@ -43,3 +43,12 @@ Future<String?> whois(String domain) async {
   );
   return response;
 }
+
+Stream<String> whoisMany(Iterable<String> domains) async* {
+  for (final domain in domains) {
+    final response = await whois(domain);
+    if (response != null) {
+      yield response;
+    }
+  }
+}
