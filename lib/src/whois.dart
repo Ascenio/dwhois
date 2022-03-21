@@ -37,7 +37,7 @@ Future<String?> whois(String domain) async {
   if (whoisServer == null) {
     return null;
   }
-  final response = queryWhoisServer(
+  final response = await queryWhoisServer(
     whoisServer: whoisServer,
     domain: domain,
   );
