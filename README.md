@@ -38,7 +38,7 @@ Future<void> main() async {
 
 ### Example
 
-This code:
+The code:
 ```dart
 import 'package:dwhois/dwhois.dart';
 
