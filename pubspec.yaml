@@ -1,6 +1,6 @@
 name: dwhois
 description: A simple whois client in Dart
-version: 1.0.0
+version: 2.0.0
 repository: https://github.com/Ascenio/dwhois
 
 environment:
