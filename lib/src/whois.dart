@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:io';
 
 Future<String> queryWhoisServer({
@@ -6,8 +7,7 @@ Future<String> queryWhoisServer({
 }) async {
   final socket = await Socket.connect(whoisServer, 43);
   socket.add('$domain\r\n'.codeUnits);
-  final response =
-      await socket.map((bytes) => String.fromCharCodes(bytes)).first;
+  final response = await socket.map(String.fromCharCodes).first;
   await socket.close();
   return response;
 }
@@ -42,13 +42,4 @@ Future<String?> whois(String domain) async {
     domain: domain,
   );
   return response;
-}
-
-Stream<String> whoisMany(Iterable<String> domains) async* {
-  for (final domain in domains) {
-    final response = await whois(domain);
-    if (response != null) {
-      yield response;
-    }
-  }
 }

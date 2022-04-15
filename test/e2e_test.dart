@@ -1,10 +1,12 @@
-import 'package:dwhois/src/whois.dart';
+import 'package:dwhois/dwhois.dart';
 import 'package:test/test.dart';
+
+import 'matchers/has_result.dart';
 
 void main() {
   test('queryWhoisServer calls whois successfully', () async {
     final actual = await whois('google.com');
-    expect(actual, startsWith(googleResultBegin));
+    expect(actual, startsWith(googleResultBegin.body));
   });
 
   group('findWhoisServer', () {
@@ -42,8 +44,8 @@ void main() {
         whoisMany(['google.com', 'pub.dev']),
         emitsInOrder([
           emitsInAnyOrder([
-            startsWith(googleResultBegin),
-            startsWith(pubDevResultBegin),
+            hasResult(googleResultBegin),
+            hasResult(pubDevResultBegin),
           ]),
           emitsDone,
         ]),
@@ -54,7 +56,10 @@ void main() {
       expect(
         whoisMany(['google.com', 'foo.bar.baz']),
         emitsInOrder([
-          startsWith(googleResultBegin),
+          emitsInAnyOrder([
+            hasResult(googleResultBegin),
+            emitsError(isA<FailedToQueryWhoisException>()),
+          ]),
           emitsDone,
         ]),
       );
@@ -62,16 +67,22 @@ void main() {
   });
 }
 
-const googleResultBegin = '''
+const googleResultBegin = WhoisResult(
+  domain: 'google.com',
+  body: '''
    Domain Name: GOOGLE.COM\r
    Registry Domain ID: 2138514_DOMAIN_COM-VRSN\r
    Registrar WHOIS Server: whois.markmonitor.com\r
    Registrar URL: http://www.markmonitor.com\r
-''';
+''',
+);
 
-const pubDevResultBegin = '''
+const pubDevResultBegin = WhoisResult(
+  domain: 'pub.dev',
+  body: '''
 Domain Name: pub.dev\r
 Registry Domain ID: 33E50E250-DEV\r
 Registrar WHOIS Server: whois.nic.google\r
 Registrar URL: http://www.markmonitor.com\r
-''';
+''',
+);
