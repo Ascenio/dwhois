@@ -6,7 +6,7 @@ import 'matchers/has_result.dart';
 void main() {
   test('queryWhoisServer calls whois successfully', () async {
     final actual = await whois('google.com');
-    expect(actual, startsWith(googleResultBegin.body));
+    expect(actual, startsWith(googleResult.body));
   });
 
   group('findWhoisServer', () {
@@ -44,8 +44,8 @@ void main() {
         whoisMany(['google.com', 'pub.dev']),
         emitsInOrder([
           emitsInAnyOrder([
-            hasResult(googleResultBegin),
-            hasResult(pubDevResultBegin),
+            hasResult(googleResult),
+            hasResult(pubDevResult),
           ]),
           emitsDone,
         ]),
@@ -57,7 +57,7 @@ void main() {
         whoisMany(['google.com', 'foo.bar.baz']),
         emitsInOrder([
           emitsInAnyOrder([
-            hasResult(googleResultBegin),
+            hasResult(googleResult),
             emitsError(isA<FailedToQueryWhoisException>()),
           ]),
           emitsDone,
@@ -67,7 +67,7 @@ void main() {
   });
 }
 
-const googleResultBegin = WhoisResult(
+const googleResult = WhoisResult(
   domain: 'google.com',
   body: '''
    Domain Name: GOOGLE.COM\r
@@ -77,7 +77,7 @@ const googleResultBegin = WhoisResult(
 ''',
 );
 
-const pubDevResultBegin = WhoisResult(
+const pubDevResult = WhoisResult(
   domain: 'pub.dev',
   body: '''
 Domain Name: pub.dev\r
